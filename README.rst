@@ -21,62 +21,27 @@ Apache CloudStack is an Apache project, see <http://cloudstack.apache.org> for
 more information.
 
 
-Website
-=============
+What is this Repository
+========================
 
-These guides can be viewed online at http://docs.cloudstack.apache.org/
+This repository contains the online guides to CloudStack which are found at http://docs.cloudstack.apache.org/
+The directory structure does not quite follow the structure seen online. This is a legacy of a previous configuration
+of the documentation.
 
-
-Translation
-===========
-
-Clean the build
-
-::
-
-   make clean
-
-Generate the .pot files
-
-::
-
-   make gettext
-
-Generate the .tx/config files with:
-
-::
-
-   sphinx-intl update-txconfig-resources --pot-dir source/locale/pot --transifex-project-name apache-cloudstack-installation-rtd --locale-dir source/locale
-
-Push the .pot files to transifex with:
-
-::
-
-   tx push -s
-
-Download the translated strings, for example Japanese (ja):
-
-::
-
-   tx pull -l ja
-
-Build the translated docs:
-
-::
-
-   sphinx-intl build --locale-dir source/locale
-   make -e SPHINXOPTS="-D language='ja'" html
-
-
-Feedback
-========
-
-Please send feedback to the mailing list at <dev@cloudstack.apache.org>,
-or the JIRA at <https://issues.apache.org/jira/browse/CLOUDSTACK>.
-
+The branches follow the CloudStack release branches, and use tags on commits to identify the subminor versions.
 
 Contributing to the documentation
 =================================
+
+General information about writing documentation can be found here: https://cwiki.apache.org/confluence/display/CLOUDSTACK/Doc+Writers
+
+To summarize; The documentation is hosted on readthedocs.org (using a custom URL). It is compiled using Sphinx with ReStructuredText as the underlying language.
+
+To contribute, one creates a pull request, gets one or more reviewers to 'okay' it. And then a committer must then merge the changes.
+The changes may need to be applied to more than one branch (including the master branch).
+
+A detailed description is setout below:
+
 
 Initial setup of your fork
 --------------------------
@@ -89,7 +54,7 @@ On your computer, follow these steps to setup a local repository for working on 
 
 .. code:: bash
 
-   $ git clone https://github.com/YOUR_ACCOUNT/cloudstack-documentation.git
+   $ git clone https://github.com/<YOUR_ACCOUNT>/cloudstack-documentation.git
    $ cd cloudstack-docs-install
    $ git remote add upstream https://github.com/apache/cloudstack-documentation.git
    $ git checkout master
@@ -107,7 +72,11 @@ It is good practice to create a new branch each time you want to contribute to t
 .. code:: bash
 
    $ git checkout -b dev
-   (make your changes)
+
+Make your changes, then:
+
+.. code:: bash
+
    $ git add .
    $ git commit -a -m "commit message for your changes"
 
@@ -146,22 +115,29 @@ When you are happy with your changes and you want to contribute them, you will b
 
 .. note:: Make sure you have merged `upstream/master` into your `dev` branch before you do this.
 
-.. code:: bash
+   .. code:: bash
 
-   $ git push origin master
-   $ git push origin dev
+      $ git push origin master
+      $ git push origin dev
+
+Create the Pull Request
+^^^^^^^^^^^^^^^^^^^^^^^^
 
 Now that the `dev` branch has been pushed to your GitHub repository, you can initiate the pull request.  
 
 To initiate the pull request, do the following:
 
-#. Navigate your browser to your forked repository: https://github.com/YOUR_ACCOUNT/cloudstack-documentation
+#. Navigate your browser to your forked repository: https://github.com/<YOUR_ACCOUNT>/cloudstack-documentation
 
 #. Click the new button called 'Compare & pull request' that showed up just above the main area in your forked repository
 
 #. Enter a good description of the work you have done and then click 'Send pull request'
 
+
+
 If you are requested to make modifications to your proposed changes, make the changes locally on your `dev` branch, re-push the changes and submit the pull request again.
+
+
 
 
 Cleaning up after a successful pull request
@@ -178,3 +154,50 @@ You can delete these deprecated branches with the following:
    $ git checkout master
    $ git branch -D dev
    $ git push origin :dev
+
+Translation
+===========
+
+Clean the build
+
+::
+
+   make clean
+
+Generate the .pot files
+
+::
+
+   make gettext
+
+Generate the .tx/config files with:
+
+::
+
+   sphinx-intl update-txconfig-resources --pot-dir source/locale/pot --transifex-project-name apache-cloudstack-installation-rtd --locale-dir source/locale
+
+Push the .pot files to transifex with:
+
+:: 
+
+  tx push -s
+
+Download the translated strings, for example Japanese (ja):
+
+::
+
+   tx pull -l ja
+
+Build the translated docs:
+
+::
+
+   sphinx-intl build --locale-dir source/locale
+   make -e SPHINXOPTS="-D language='ja'" html
+
+
+Feedback
+========
+
+Please send feedback to the mailing list at <dev@cloudstack.apache.org>,
+or the JIRA at <https://issues.apache.org/jira/browse/CLOUDSTACK>.
