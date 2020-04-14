@@ -37,8 +37,14 @@ MySQL. See :ref:`install-database-on-separate-node`.
 
 #. Install MySQL from the package repository of your distribution:
 
-   .. parsed-literal::
+   CentOS 7 and later no longer provides the MySQL binaries, add a repository first:
 
+   .. parsed-literal::
+      wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+      rpm -ivh mysql-community-release-el7-5.noarch.rpm
+      yum -y update
+
+   .. parsed-literal::
       yum install mysql-server
 
    .. parsed-literal::
@@ -249,8 +255,14 @@ same node for MySQL. See `“Install the Database on the Management Server Node�
 
 #. Install MySQL from the package repository from your distribution:
 
-   .. parsed-literal::
+   CentOS 7 and later no longer provides the MySQL binaries, add a repository first:
 
+   .. parsed-literal::
+      wget http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+      rpm -ivh mysql-community-release-el7-5.noarch.rpm
+      yum -y update
+
+   .. parsed-literal::
       yum install mysql-server
 
    .. parsed-literal::
@@ -377,7 +389,56 @@ same node for MySQL. See `“Install the Database on the Management Server Node�
    “Successfully initialized the database.”
 
 #. Now that the database is set up, you can finish configuring the OS
-   for the Management Server. This command will set up iptables,
+   for the Management Server. 
+
+   First, install the MySQL connectors for Python and Java.
+
+   Install Python MySQL connector using the official MySQL packages repository.
+   Create the file ``/etc/yum.repos.d/mysql.repo`` with the following content:
+
+   .. parsed-literal::
+
+      [mysql-connectors-community]
+      name=MySQL Community connectors
+      baseurl=http://repo.mysql.com/yum/mysql-connectors-community/el/$releasever/$basearch/
+      enabled=1
+      gpgcheck=1
+      exclude: "mysql-connector-java*"
+
+   Import GPG public key from MySQL:
+
+   .. parsed-literal::
+
+      rpm --import http://repo.mysql.com/RPM-GPG-KEY-mysql
+
+   Install mysql-connector
+
+   .. parsed-literal::
+
+      yum install mysql-connector-python
+
+
+   Install python-dns
+
+   .. parsed-literal::
+
+      yum -y install epel-release
+      yum -y install python-dns
+
+   Please note: There are issues with using mysql-connector-java-8.0.19-1.el7, to
+   install mysql-connector-java-5.1.25-3.el7 execute the following command:
+
+      Please note: There are issues with using mysql-connector-java-8.0.19-1.el7. To 
+      workaround, exclude it from the repository configuration with the 'exclude' flag. 
+      This will install the earlier mysql-connector-java-5.* package from the OS 
+      base repository instead:
+
+..   parsed-literal::
+
+        yum -y install mysql-connector-java
+
+
+   Then start the cloustack-setup-management installer. This command will set up iptables,
    sudoers, and start the Management Server.
 
    .. parsed-literal::
