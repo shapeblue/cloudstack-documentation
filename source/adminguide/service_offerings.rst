@@ -135,6 +135,9 @@ offerings. The compute service offering specifies:
 
 -  Guest Networking type (virtual or direct)
 
+-  Root Disk size (optional). If not defined by CloudStack administrator,
+   users can set a custom Root disk size.
+
 -  Tags on the root disk
 
 The disk offering specifies:
@@ -184,8 +187,15 @@ To create a new compute offering:
       system VM is running. Shared allocates from storage accessible via
       NFS.
 
-   -  **Provisioning type**: The type of disk that should be allocated. 
-      Local
+   -  **Provisioning type**: The type of disk that should be allocated.
+      Valid values are thin, sparse, fat. When using the VMWare hypervisor,
+      these values are mapped to the following vSphere disk provisioning types:
+
+      -  **thin**:  **Thin Provision**
+      -  **sparse**:  **Thick Provision Lazy Zeroed**
+      -  **fat**:   **Thick Provision Eager Zeroed**
+
+      The disk provisioning type strictness on VMWare is controlled with the zone level setting - **disk.provisioning.type.strictness**. If set to true, the disk is created only when there is a suitable storage pool that supports the disk provisioning type specified by the service/disk offering. If set to false, the disk is created with a disk provisioning type supported by the pool. Default value is false and this is currently supported for VMware only.
 
    -  **Compute Offering Type**: The amount of freedom that the end user
       has to customise the compute power that their instance has when using this
@@ -341,6 +351,8 @@ To create a new compute offering:
       only specific zones can be selected.  One or more zones can be selected from 
       this list box by holding down the control key and clicking on the desired zones.
 
+   -  **Storage Policy**: Name of the storage policy defined at vCenter, this is applicable only for VMware.
+      When a specific Zone is selected, one of the storage policies can be selected from the list box.
 
 #. Click Add.
 
@@ -377,6 +389,16 @@ To create a new disk offering:
 
    -  **Disk Size**: Appears only if Custom Disk Size is not selected.
       Define the volume size in GB (2^30 1GB = 1,073,741,824 Bytes).
+
+   -  **Provisioning type**: The type of disk that should be allocated.
+      Valid values are thin, sparse, fat. When using the VMWare hypervisor,
+      these values are mapped to the following vSphere disk provisioning types:
+
+      -  **thin**:  **Thin Provision**
+      -  **sparse**:  **Thick Provision Lazy Zeroed**
+      -  **fat**:   **Thick Provision Eager Zeroed**
+
+      The disk provisioning type strictness on VMWare is controlled with the zone level setting - **disk.provisioning.type.strictness**. If set to true, the disk is created only when there is a suitable storage pool that supports the disk provisioning type specified by the service/disk offering. If set to false, the disk is created with a disk provisioning type supported by the pool. Default value is false and this is currently supported for VMware only.
 
    -  **QoS Type** [2]_: Three options: Empty (no Quality of Service), hypervisor
       (rate limiting enforced on the hypervisor side), and storage
@@ -429,6 +451,9 @@ To create a new disk offering:
    -  **Zone**: This controls which zones a disk offering is available in.  'All zones' or 
       only specific zones can be selected.  One or more zones can be selected from 
       this list box by holding down the control key and selecting the desired zones.
+
+   -  **Storage Policy**: Name of the storage policy defined at vCenter, this is applicable only for VMware.
+      When a specific Zone is selected, one of the storage policies can be selected from the list box.
 
 #. Click Add.
 
@@ -696,4 +721,3 @@ default system offering used for System VMs.
 
 #. Destroy the existing CPVM or SSVM offerings and wait for them to be
    recreated. The new CPVM or SSVM are configured with the new offering.
-
