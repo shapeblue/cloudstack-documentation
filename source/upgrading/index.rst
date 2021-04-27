@@ -31,6 +31,10 @@ release.  Please read through all sections carefully before starting.
 .. note::
    For information on the API changes and issues fixed in this release, please see the Release Notes section of the documentation
 
+.. toctree::
+   :maxdepth: 1
+
+   MySQL
 
 Contents:
 
