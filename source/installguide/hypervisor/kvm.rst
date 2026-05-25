@@ -328,9 +328,6 @@ sudoers file:
    cloudstack ALL=NOPASSWD: /usr/bin/cloudstack-setup-agent
    Defaults:cloudstack !requiretty
 
-Please note that when adding the KVM host to your Cloudstack Management server,
-the setup commands will be run with sudo, even with root account.
-You should make sure that you are allowed to run binaries and sudo binaries.
 
 On security hardened machines, make sure that the following line is
 commented-out in your sudoers file if it exists:
@@ -924,6 +921,38 @@ although a reboot is recommended to see if everything works properly.
    in case you made a configuration error and the network stops functioning!
 
 
+Configure Oracle Linux for Basic Networks using nmcli
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+All the required packages were installed when you installed libvirt, so
+we only have to configure the network.
+
+Disable IP settings on physical NIC first
+
+.. parsed-literal::
+   nmcli con mod eth0 ipv4.method disabled ipv6.method ignore
+  
+Configure cloudbr0 and include the Management IP of the hypervisor.
+
+.. parsed-literal::
+   nmcli con add type bridge ifname cloudbr0 con-name cloudbr0
+   nmcli con add type ethernet ifname eth0 master cloudbr0 slave-type bridge con-name cloudbr0-eth0
+   nmcli con modify cloudbr0 ipv4.addresses  192.168.42.11/24 ipv4.gateway 192.168.42.1 ipv4.method manual ipv6.method ignore
+
+
+Configure cloudbr1 as a plain bridge without an IP address
+
+.. parsed-literal::
+   nmcli con add type bridge ifname cloudbr1 con-name cloudbr1 ipv4.method disabled  ipv6.method ignore
+   nmcli con add type vlan ifname eth0.20 dev eth0 id 20 master cloudbr1 con-name vlan20
+
+With this configuration you should be able to restart the network,
+although a reboot is recommended to see if everything works properly.
+
+.. warning::
+   Make sure you have an alternative way like IPMI or ILO to reach the machine
+   in case you made a configuration error and the network stops functioning!
+
+
 
 Network Example for Advanced Networks
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -1228,6 +1257,38 @@ although a reboot is recommended to see if everything works properly.
 .. warning::
    Make sure you have an alternative way like IPMI or ILO to reach the machine
    in case you made a configuration error and the network stops functioning!
+
+
+Configure Oracle Linux for Advance Networks using nmcli
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+All the required packages were installed when you installed libvirt, so
+we only have to configure the network.
+
+Disable IP settings on physical NICs first
+
+.. parsed-literal::
+   nmcli con mod eth0 ipv4.method disabled ipv6.method ignore
+   nmcli con mod eth1 ipv4.method disabled ipv6.method ignore
+  
+Configure cloudbr0 and include the Management IP of the hypervisor.
+
+.. parsed-literal::
+   nmcli con add type bridge ifname cloudbr0 con-name cloudbr0 ipv4.addresses 192.168.42.11/24 ipv4.gateway 192.168.42.1 ipv4.method manual ipv6.method ignore
+   nmcli con add type ethernet ifname eth0 master cloudbr0 slave-type bridge con-name cloudbr0-eth0
+
+Configure cloudbr1 as a plain bridge without an IP address
+
+.. parsed-literal::
+   nmcli con add type bridge ifname cloudbr1 con-name cloudbr1 ipv4.method disabled ipv6.method ignore
+   nmcli con add type ethernet ifname eth1 master cloudbr1 slave-type bridge con-name cloudbr1-eth1
+
+With this configuration you should be able to restart the network,
+although a reboot is recommended to see if everything works properly.
+
+.. warning::
+   Make sure you have an alternative way like IPMI or ILO to reach the machine
+   in case you made a configuration error and the network stops functioning!
+
 
 
 Configure the network using OpenVswitch
@@ -1628,6 +1689,9 @@ In order to be able to perform Volume Snapshots on CentOS 6.x (greater than 6.4)
 replace your version of qemu-img with one which has been patched to include the '-s'
 switch.
 
+CloudStack uses the rbd command to get the physical size of the snapshots for the volumes on ceph
+primary storage. This requires ceph-common package to be installed on the KVM hosts. If it
+is not installed, the allocated size is used as the physical size of the snapshots.
 
 Live Migration
 ^^^^^^^^^^^^^^

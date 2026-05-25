@@ -81,7 +81,7 @@ Eg: To generate the latest kubernetes iso
 
 Usage:
 
-.. parsed-literal::
+::
 
    # ./create-kubernetes-binaries-iso.sh OUTPUT_PATH KUBERNETES_VERSION CNI_VERSION CRICTL_VERSION CALICO_NETWORK_YAML_CONFIG DASHBOARD_YAML_CONFIG [OPTIONAL_OUTPUT_FILENAME] [OPTIONAL_ETCD_VERSION]
 
