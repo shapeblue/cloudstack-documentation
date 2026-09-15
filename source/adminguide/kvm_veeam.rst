@@ -211,7 +211,11 @@ network that provides connectivity between the following components:
 
 Veeam uses userdata to configure the worker VM; therefore, the network
 offering of the network to which the worker VM is attached must support
-the Userdata service.
+the Userdata service, provided by ``ConfigDrive``.
+
+.. note::
+  Please select ``ConfigDrive`` as the Userdata provider for the worker VM 
+  network offering.
 
 For Advanced network zones, including Edge zones, one approach is to create a
 **shared network** within the **management traffic range** configured in
@@ -565,7 +569,7 @@ Limitations and Recommendations
 
 * Supported for all zone types using the KVM hypervisor when the
   worker VM is deployed on a shared network with offering that supports
-  Userdata service. Additional ingress and egress rules may be required
+  Userdata service via ``ConfigDrive``. Additional ingress and egress rules may be required
   depending on the network configuration.
 * All backup and restore operations must be initiated from **Veeam Backup
   & Replication**.
