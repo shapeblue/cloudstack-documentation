@@ -200,8 +200,15 @@ the current locale, the UI falls back to the server's ``errortext`` as-is.
 
 This means a developer or operator can add or edit a UI-side translation for
 a specific error message by adding a key equal to its ``errortextkey`` to the
-relevant locale file, with no change needed on the management server. For
-example, a translation added to ``ui/public/locales/hi.json`` for the
+relevant locale file, with no change needed on the management server.
+
+**Admin variant**: like the server, before falling back to the base key, the
+UI first tries a key suffixed ``.admin`` when the current user is a root
+admin, the same ``.admin`` suffix and root-admin-only condition described
+under "Admin-only variants" above. There is no equivalent variant for
+resource admins, domain admins, or regular users.
+
+For example, a translation added to ``ui/public/locales/hi.json`` for the
 ``vm.deploy.resourcelimit.exceeded.account`` error from the example above
 would show a Hindi-locale user:
 
